@@ -1,0 +1,12 @@
+version: '3.8'
+name: esoh
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYGEOAPI_CONFIG=/e-soh-api/pygeoapi-config.yml
+      - PYGEOAPI_OPENAPI=/e-soh-api/pygeoapi-openapi-config.yml
+    restart: on-failure
