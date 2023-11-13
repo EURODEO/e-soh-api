@@ -268,29 +268,10 @@ paths:
       summary: query E-SOH observations by cube
       tags:
       - obs
-  /collections/obs/locations:
+  /collections/obs/items:
     get:
-      description: E-SOH observations stations
-      operationId: describeObs/locationsCollection
-      parameters:
-      - $ref: '#/components/parameters/f'
-      - $ref: '#/components/parameters/lang'
-      responses:
-        '200':
-          $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/Collection
-        '400':
-          $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/InvalidParameter
-        '404':
-          $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
-        '500':
-          $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
-      summary: Get Observations stations metadata
-      tags:
-      - obs/locations
-  /collections/obs/locations/items:
-    get:
-      description: E-SOH observations stations
-      operationId: getObs/locationsFeatures
+      description: E-SOH observations
+      operationId: getObsFeatures
       parameters:
       - &id001
         description: The optional f parameter indicates the output format which the
@@ -404,21 +385,21 @@ paths:
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
         '500':
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
-      summary: Get Observations stations items
+      summary: Get Observations items
       tags:
-      - obs/locations
+      - obs
     options:
-      operationId: optionsObs/locationsFeatures
+      operationId: optionsObsFeatures
       responses:
         '200':
           description: options response
-      summary: Options for Observations stations items
+      summary: Options for Observations items
       tags:
-      - obs/locations
-  /collections/obs/locations/items/{featureId}:
+      - obs
+  /collections/obs/items/{featureId}:
     get:
-      description: E-SOH observations stations
-      operationId: getObs/locationsFeature
+      description: E-SOH observations
+      operationId: getObsFeature
       parameters:
       - $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/parameters/featureId
       - $ref: '#/components/parameters/crs'
@@ -435,23 +416,23 @@ paths:
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
         '500':
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
-      summary: Get Observations stations item by id
+      summary: Get Observations item by id
       tags:
-      - obs/locations
+      - obs
     options:
-      operationId: optionsObs/locationsFeature
+      operationId: optionsObsFeature
       parameters:
       - $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/parameters/featureId
       responses:
         '200':
           description: options response
-      summary: Options for Observations stations item by id
+      summary: Options for Observations item by id
       tags:
-      - obs/locations
-  /collections/obs/locations/queryables:
+      - obs
+  /collections/obs/queryables:
     get:
-      description: E-SOH observations stations
-      operationId: getObs/locationsQueryables
+      description: E-SOH observations
+      operationId: getObsQueryables
       parameters:
       - *id001
       - *id002
@@ -464,9 +445,9 @@ paths:
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
         '500':
           $ref: https://schemas.opengis.net/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
-      summary: Get Observations stations queryables
+      summary: Get Observations queryables
       tags:
-      - obs/locations
+      - obs
   /conformance:
     get:
       description: API conformance definition
@@ -526,6 +507,4 @@ tags:
   name: stac
 - description: E-SOH observations
   name: obs
-- description: E-SOH observations stations
-  name: obs/locations
 

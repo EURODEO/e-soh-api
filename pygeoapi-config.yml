@@ -104,6 +104,10 @@ resources:
     extents: # spatial and temporal extents
       spatial: # required
         bbox: [-180, -90, 180, 90] # list of minx, miny, maxx, maxy
+        crs:
+          - http://www.opengis.net/def/crs/EPSG/0/28992
+          - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+          - http://www.opengis.net/def/crs/EPSG/0/4326
     links: # list of 1..n related links
       - type: text/csv # MIME type
         rel: canonical # link relations per https://www.iana.org/assignments/link-relations/link-relations.xhtml
@@ -122,29 +126,11 @@ resources:
           - instruments
           - processingLevels
         options:
-          dshost: 157.249.74.132
+          dshost: datastore.esoh.met.no
           dsport: 50050
         id_field: 10
-  obs/locations:
-    type: collection
-    title: Observations stations
-    description: E-SOH observations stations
-    keywords:
-      - observations
-      - data
-      - api
-    extents: # spatial and temporal extents
-      spatial: # required
-        bbox: [-180, -90, 180, 90] # list of minx, miny, maxx, maxy
-    links: # list of 1..n related links
-      - type: text/csv # MIME type
-        rel: canonical # link relations per https://www.iana.org/assignments/link-relations/link-relations.xhtml
-        title: data # title
-        href: https://github.com/mapserver/mapserver/blob/branch-7-0/msautotest/wxs/data/obs.csv # URL
-        hreflang: en-US # language
-    providers:
       - type: feature
-        name: esoh.grpc_provider.gRPCprovider_locations
+        name: esoh.grpc_provider.gRPCprovider_records
         data: observations
         parameters:
           - interval

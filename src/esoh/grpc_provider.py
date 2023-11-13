@@ -9,12 +9,9 @@ import esoh.datastore_pb2_grpc as ds_grpc
 
 import google.protobuf.struct_pb2 as Struct
 
-from pygeoapi.provider.base import (BaseProvider,
-                                    ProviderConnectionError,
-                                    ProviderNoDataError,
-                                    ProviderQueryError,
-                                    ProviderInvalidQueryError)
+from pygeoapi.provider.base import BaseProvider
 from pygeoapi.provider.base_edr import BaseEDRProvider
+from pygeoapi.util import crs_transform
 
 from google.protobuf import json_format
 from google.protobuf.timestamp_pb2 import Timestamp
@@ -79,8 +76,7 @@ def collect_data(ts_mdata, obs_mdata):
 def unpack_paramaters(coverages):
     paramaters = {}
 
-    for i in list(map((lambda x: x.parameters), coverages)):
-
+    for i in map((lambda x: x.parameters), coverages):
         paramaters.update(i)
 
     return paramaters
@@ -103,8 +99,8 @@ class gRPCprovider(BaseProvider):
         options = [('grpc.max_message_length', 100 * 1024 * 1024),
                    ('grpc.max_receive_message_length', 512 * 1024 * 1024)]
 
-        self._channel = grpc.insecure_channel(
-            f'{provider_def["options"]["dshost"]}:{provider_def["options"]["dsport"]}', options=options)
+        self._channel = grpc.secure_channel(
+            f'{provider_def["options"]["dshost"]}:{provider_def["options"]["dsport"]}', credentials=grpc.ssl_channel_credentials(), options=options)
         self._stub = ds_grpc.DatastoreStub(self._channel)
 
         self.is_channel_ready()
@@ -155,17 +151,10 @@ class gRPC_EDRprovider(BaseEDRProvider, gRPCprovider):
 
         queriables = self._parse_common_queriables(**kwargs)
 
-        interval = "interval" in queriables
-        inside = "inside" in queriables
-        if interval and inside:
-            obs_req = ds.GetObsRequest(inside=queriables.pop(
-                "inside"), interval=queriables.pop("interval"))
-        elif interval:
-            obs_req = ds.GetObsRequest(interval=queriables.pop("interval"))
-        elif inside:
-            obs_req = ds.GetObsRequest(inside=queriables.pop("inside"))
-        else:
-            obs_req = ds.GetObsRequest()
+        inside = queriables.pop("inside") if "inside" in queriables else None
+        interval = queriables.pop("interval") if "interval" in queriables else None
+        obs_req = ds.GetObsRequest(inside=inside,
+                                   interval=interval)
 
         # All paramaters with depth 1 can be parsed here
         json_format.ParseDict(queriables, obs_req)
@@ -280,7 +269,7 @@ class gRPC_EDRprovider(BaseEDRProvider, gRPCprovider):
 # '{"interval": {"start": "2023-10-13T10:08:00Z", "end": "2023-10-13T10:10:10Z"}, "standard_names": "air_temperature"}
 
 
-class gRPCprovider_locations(gRPCprovider):
+class gRPCprovider_records(gRPCprovider):
     """Provider for the E-SOH datastore grpc service"""
 
     def __init__(self, provider_def):
@@ -288,6 +277,8 @@ class gRPCprovider_locations(gRPCprovider):
         Docstring for grpcprovider poc
         """
         super().__init__(provider_def)
+
+        self.fields = self.get_fields()
 
     def query(self, **kwargs):
         """
@@ -395,3 +386,6 @@ class gRPCprovider_locations(gRPCprovider):
     def get_schema(self):
         tmp = [i for i in ds.GetObsRequest().DESCRIPTOR.fields_by_name.keys()]
         return tmp
+
+    def _load_and_prepare_item(self, item, identifier=None, accept_missing_identifier=False, raise_if_exists=True):
+        return super()._load_and_prepare_item(item, identifier, accept_missing_identifier, raise_if_exists)

@@ -7,7 +7,7 @@ dependencies = [
 	"protobuf ~= 4.24.3",
 	"grpcio == 1.59.0",
 	"covjson-pydantic",
-	"geojson-pydantic==0.6.1",
+	"geojson-pydantic~=1.0.1",
 ]
 name = "esoh-api"
 description = "This project contains source code for the E-SOH datastore API"

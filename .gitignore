@@ -183,8 +183,3 @@ src/esoh/ingest/bufr/oscar_test
 
 #Compiled binaries
 *.o
-
-
-
-
-*.env
